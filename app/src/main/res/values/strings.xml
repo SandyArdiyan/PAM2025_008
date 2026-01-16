@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">TugasAkhirPam</string>
+    <string name="app_name">Sistem Antrian RS</string>
+
+    <string name="btn_simpan">Simpan</string>
+    <string name="btn_update">Update</string>
+    <string name="btn_delete">Hapus</string>
+    <string name="btn_cancel">Batal</string>
+    <string name="btn_next">Selanjutnya</string>
+
+    <string name="lbl_nama_pasien">Nama Pasien</string>
+    <string name="lbl_no_rm">No. Rekam Medis</string>
+    <string name="lbl_alamat">Alamat</string>
+    <string name="lbl_poli">Poli Tujuan</string>
+    <string name="lbl_tanggal">Tanggal Pendaftaran</string>
+    <string name="lbl_antrian_list">Daftar Antrian</string>
+    <string name="lbl_detail_antrian">Detail Antrian</string>
+    <string name="lbl_entry_antrian">Tambah Antrian</string>
+    <string name="lbl_edit_antrian">Edit Antrian</string>
+
+    <string name="loading">Memuat Data...</string>
+    <string name="error">Terjadi Kesalahan</string>
+    <string name="retry">Coba Lagi</string>
+    <string name="empty_data">Data Kosong</string>
+    <string name="success_save">Berhasil Disimpan</string>
+    <string name="confirm_delete">Yakin ingin menghapus data ini?</string>
 </resources>
