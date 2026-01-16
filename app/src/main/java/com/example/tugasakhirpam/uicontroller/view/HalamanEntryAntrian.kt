@@ -7,6 +7,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.tugasakhirpam.uicontroller.route.DestinasiEntry
@@ -36,20 +37,36 @@ fun HalamanEntryAntrian(
             )
         }
     ) { innerPadding ->
-        EntryBody(
-            insertUiState = viewModel.uiStateAntrian,
-            onAntrianValueChange = viewModel::updateUiState,
-            onSaveClick = {
-                coroutineScope.launch {
-                    viewModel.saveAntrian()
-                    navigateBack()
-                }
-            },
+        Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .verticalScroll(rememberScrollState())
                 .fillMaxWidth()
-        )
+        ) {
+            // Tampilkan Pesan Error jika ada
+            if (viewModel.isError) {
+                Text(
+                    text = viewModel.errorMessage,
+                    color = Color.Red,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+
+            EntryBody(
+                insertUiState = viewModel.uiStateAntrian,
+                onAntrianValueChange = viewModel::updateUiState,
+                onSaveClick = {
+                    coroutineScope.launch {
+                        viewModel.saveAntrian()
+                        // Hanya kembali jika sukses
+                        if (viewModel.isSuccess) {
+                            navigateBack()
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 

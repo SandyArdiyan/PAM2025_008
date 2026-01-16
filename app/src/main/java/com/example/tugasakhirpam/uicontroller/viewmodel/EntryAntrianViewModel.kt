@@ -10,16 +10,41 @@ import com.example.tugasakhirpam.repositori.RepositoryAntrian
 import kotlinx.coroutines.launch
 
 class EntryAntrianViewModel(private val repositoryAntrian: RepositoryAntrian) : ViewModel() {
+
     var uiStateAntrian by mutableStateOf(InsertUiState())
         private set
+
+    // State untuk menangani status sukses/gagal
+    var isSuccess by mutableStateOf(false)
+    var isError by mutableStateOf(false)
+    var errorMessage by mutableStateOf("")
 
     fun updateUiState(detailAntrian: DetailAntrian) {
         uiStateAntrian = InsertUiState(insertUiEvent = detailAntrian)
     }
 
+    // Fungsi simpan dengan penanganan error (Try-Catch)
     suspend fun saveAntrian() {
         if (validateInput()) {
-            repositoryAntrian.insertAntrian(uiStateAntrian.insertUiEvent.toAntrian())
+            try {
+                // Reset status sebelum mencoba menyimpan
+                isError = false
+                errorMessage = ""
+
+                // Coba simpan ke server
+                repositoryAntrian.insertAntrian(uiStateAntrian.insertUiEvent.toAntrian())
+
+                // Jika tidak ada error di atas, berarti sukses
+                isSuccess = true
+            } catch (e: Exception) {
+                // Tangkap error jika server mati/koneksi gagal
+                isError = true
+                errorMessage = "Gagal menyimpan: ${e.message}"
+                isSuccess = false
+            }
+        } else {
+            isError = true
+            errorMessage = "Data tidak boleh kosong!"
         }
     }
 
@@ -43,7 +68,6 @@ data class DetailAntrian(
     val tanggal: String = ""
 )
 
-// Konversi dari UI State ke Model Data
 fun DetailAntrian.toAntrian(): Antrian = Antrian(
     id = id,
     namaPasien = namaPasien,
@@ -53,7 +77,6 @@ fun DetailAntrian.toAntrian(): Antrian = Antrian(
     tanggal = tanggal
 )
 
-// Konversi dari Model Data ke UI State (untuk Edit/Detail)
 fun Antrian.toDetailAntrian(): DetailAntrian = DetailAntrian(
     id = id,
     namaPasien = namaPasien,

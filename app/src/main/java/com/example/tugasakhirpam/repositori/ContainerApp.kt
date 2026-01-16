@@ -11,7 +11,9 @@ interface AppContainer {
 }
 
 class ContainerApp : AppContainer {
-    private val baseUrl = "http://10.0.2.2:3000/api/" // Ganti dengan URL API Anda
+    // Ganti "10.0.2.2" dengan IP Laptop jika pakai HP Asli (misal "192.168.1.5")
+    private val baseUrl = "http://10.0.2.16:3000/api/"
+
     private val json = Json { ignoreUnknownKeys = true }
 
     private val retrofit: Retrofit = Retrofit.Builder()
