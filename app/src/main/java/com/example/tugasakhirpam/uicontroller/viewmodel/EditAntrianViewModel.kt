@@ -18,15 +18,13 @@ class EditAntrianViewModel(
     var antrianUiState by mutableStateOf(InsertUiState())
         private set
 
-    // Mengambil ID dari navigasi (dikirim saat tombol Edit diklik)
-    private val _idAntrian: String = checkNotNull(savedStateHandle[DestinasiEdit.itemIdArg])
+    // Pastikan key ini sama dengan di DestinasiEdit
+    val itemId: String = checkNotNull(savedStateHandle[DestinasiEdit.itemIdArg])
 
     init {
-        // Otomatis ambil data lama saat halaman dibuka
         viewModelScope.launch {
             try {
-                val antrian = repositoryAntrian.getAntrianById(_idAntrian)
-                // Konversi data database ke tampilan UI
+                val antrian = repositoryAntrian.getAntrianById(itemId)
                 antrianUiState = antrian.toUiStateAntrian()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -34,15 +32,13 @@ class EditAntrianViewModel(
         }
     }
 
-    // Fungsi update tampilan saat user mengetik
     fun updateUiState(detailAntrian: DetailAntrian) {
         antrianUiState = InsertUiState(insertUiEvent = detailAntrian)
     }
 
-    // Fungsi Simpan Perubahan ke Database
     suspend fun updateAntrian() {
         try {
-            repositoryAntrian.updateAntrian(_idAntrian, antrianUiState.insertUiEvent.toAntrian())
+            repositoryAntrian.updateAntrian(itemId, antrianUiState.insertUiEvent.toAntrian())
         } catch (e: Exception) {
             e.printStackTrace()
         }

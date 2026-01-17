@@ -7,7 +7,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -35,12 +34,15 @@ fun HalamanEditAntrian(
             )
         }
     ) { innerPadding ->
-        // Memanggil fungsi dari HalamanEntryAntrian.kt
+        // PERBAIKAN: Memanggil 'EntryBody' yang sudah didefinisikan di HalamanEntryAntrian.kt
+        // Sebelumnya error karena memanggil 'EntryAntrianBody' yang tidak ada.
         EntryAntrianBody(
-            // GANTI: Gunakan insertUiState (bukan antrianUiState)
-            insertUiState = viewModel.insertUiState,
-            // GANTI: Gunakan updateInsertAntrianState (bukan updateUiState)
-            onAntrianValueChange = viewModel::updateInsertAntrianState,
+            // PERBAIKAN: Menggunakan 'antrianUiState' (sesuai nama di EditAntrianViewModel)
+            insertUiState = viewModel.antrianUiState,
+
+            // PERBAIKAN: Menggunakan 'updateUiState' (sesuai nama di EditAntrianViewModel)
+            onAntrianValueChange = viewModel::updateUiState,
+
             onSaveClick = {
                 coroutineScope.launch {
                     viewModel.updateAntrian()

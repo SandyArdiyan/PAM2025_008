@@ -8,8 +8,56 @@ import androidx.lifecycle.viewModelScope
 import com.example.tugasakhirpam.modeldata.Antrian
 import com.example.tugasakhirpam.repositori.RepositoryAntrian
 import kotlinx.coroutines.launch
-// import java.io.IOException <-- Hapus atau biarkan tidak terpakai
+import java.io.IOException
 
+// ==========================================
+// 1. DATA CLASS BERSAMA (HANYA DITULIS DI SINI)
+// ==========================================
+data class DetailAntrian(
+    val id: String = "",
+    val namaPasien: String = "",
+    val noRekamMedis: String = "",
+    val poli: String = "",
+    val alamat: String = "",
+    val dokter: String = "",
+    val tanggal: String = "",
+    val status: String = "Menunggu"
+)
+
+data class InsertUiState(
+    val insertUiEvent: DetailAntrian = DetailAntrian()
+)
+
+// Fungsi Konversi
+fun DetailAntrian.toAntrian(): Antrian = Antrian(
+    id = id,
+    namaPasien = namaPasien,
+    noRekamMedis = noRekamMedis,
+    poli = poli,
+    alamat = alamat,
+    dokter = dokter,
+    tanggal = tanggal,
+    status = status
+)
+
+fun Antrian.toDetailAntrian(): DetailAntrian = DetailAntrian(
+    id = id ?: "",
+    namaPasien = namaPasien ?: "",
+    noRekamMedis = noRekamMedis ?: "",
+    poli = poli ?: "",
+    alamat = alamat ?: "",
+    dokter = dokter ?: "",
+    tanggal = tanggal ?: "",
+    status = status ?: "Menunggu"
+)
+
+fun Antrian.toUiStateAntrian(): InsertUiState = InsertUiState(
+    insertUiEvent = this.toDetailAntrian()
+)
+
+// ==========================================
+// 2. VIEWMODEL HOME
+// ==========================================
 sealed interface AntrianUiState {
     data class Success(val antrian: List<Antrian>) : AntrianUiState
     object Error : AntrianUiState
@@ -29,8 +77,7 @@ class AntrianViewModel(private val repositoryAntrian: RepositoryAntrian) : ViewM
             antrianUiState = AntrianUiState.Loading
             antrianUiState = try {
                 AntrianUiState.Success(repositoryAntrian.getAntrian())
-            } catch (e: Exception) { // <--- UBAH JADI Exception
-                e.printStackTrace() // Tambahkan ini biar kita bisa lihat errornya di Logcat
+            } catch (e: Exception) {
                 AntrianUiState.Error
             }
         }
@@ -41,8 +88,7 @@ class AntrianViewModel(private val repositoryAntrian: RepositoryAntrian) : ViewM
             try {
                 repositoryAntrian.deleteAntrian(id)
                 getAntrian()
-            } catch (e: Exception) { // <--- UBAH JADI Exception
-                e.printStackTrace()
+            } catch (e: Exception) {
                 antrianUiState = AntrianUiState.Error
             }
         }
